@@ -1,9 +1,9 @@
 use notify_rust::Notification;
 use std::path::Path;
 
-pub fn send_fail_notification(job_name: &str) {
+pub fn send_fail_notification(job_name: &str, job_status: &str) {
     let summary = "JENKINS BUILD FAILED!".to_string();
-    let body = format!("Failed to build job {}", job_name);
+    let body = format!("Job {} ended with status: {}", job_name, job_status);
 
     let abs_path = Path::new("assets\\notification_image.png")
         .canonicalize()
