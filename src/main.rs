@@ -11,7 +11,7 @@ async fn main() {
     
     match get_job_data("MockJob").await {
         Ok(summary) => {
-            println!("Build zakończony: {}", summary.result);
+            println!("Build zakończony: {}", summary.status);
             println!("Czas trwania: {} sekund", summary.duration);
             println!("Start: {}", summary.start_time);
         }
