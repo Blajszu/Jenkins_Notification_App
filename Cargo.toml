@@ -10,4 +10,8 @@ dotenv = "0.15"
 reqwest = { version = "0.12.15", features = ["json"] }
 serde = { version = "1.0.219", features = ["derive"] }
 tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
-time = "0.3.41"
+slint = { version = "1.12" }
+tray-item = "0.10.0"
+
+[build-dependencies]
+embed-resource = "3.0.4"

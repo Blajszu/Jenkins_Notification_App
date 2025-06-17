@@ -9,7 +9,7 @@ fn get_builds_names_from_file(file_path: &str) -> Result<Vec<String>, Box<dyn st
     Ok(builds)
 }
 
-async fn get_all_builds_data() -> Result<Vec<BuildSummary>, Box<dyn std::error::Error>> {
+pub async fn get_all_builds_data() -> Result<Vec<BuildSummary>, Box<dyn std::error::Error>> {
     let builds = get_builds_names_from_file("src\\builds.txt")?;
     if builds.is_empty() {
         return Err("No builds found in the file.".into());
