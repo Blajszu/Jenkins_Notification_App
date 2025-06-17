@@ -1,5 +1,15 @@
+mod change_handler;
+mod notification;
+mod jenkins_api;
+mod builds_info_checker;
+
+use std::thread;
 use std::sync::mpsc;
 use tray_item::{IconSource, TrayItem};
+
+pub(crate) use crate::change_handler::change_handler;
+pub(crate) use crate::builds_info_checker::check_builds;
+use crate::builds_info_checker::check_builds_failed;
 
 enum Message {
     Quit,
@@ -8,6 +18,16 @@ enum Message {
 }
 
 fn main() {
+
+    let _ = std::thread::spawn(|| {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(async {
+            if let Err(e) = check_builds_failed(change_handler).await {
+                eprintln!("Error in check_builds: {}", e);
+            }
+        });
+    });
+
     let mut tray = TrayItem::new(
         "JNotify",
         IconSource::Resource("bell"),
