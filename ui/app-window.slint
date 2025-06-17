@@ -1,0 +1,127 @@
+import { VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint";
+
+export struct BuildTileData {
+    name: string,
+    status: string,
+    duration: string,
+    time: string,
+}
+
+component StatusDisplay inherits HorizontalBox {
+    in property <string> status-text;
+
+    height: 40px;
+
+    Rectangle { width: 80px; }
+
+    Rectangle {
+        width: 200px;
+        height: 40px;
+        background: #635169;
+        border-radius: 6px;
+
+        Text {
+            color: status-text == "SUCCESS" ? #4CAF50
+                   : status-text == "FAILURE" ? #F44336
+                   : status-text == "INPROGRESS" ? #FF9800
+                   : status-text == "IN QUEUE" ? #C4B22D
+                   : status-text == "BUILDING" ? #2196F3
+                   : status-text == "ABORTED" ? #141515
+                   : status-text == "UNSTABLE" ? #9C27B0
+                   : status-text == "NOT BUILT" ? #A0879F
+                   : #000000;
+
+            text: status-text == "INPROGRESS" ? "IN PROGRESS" : status-text;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+    }
+}
+
+component LabeledValueBox inherits VerticalBox {
+    in property <string> label-text;
+    in property <string> value-text;
+
+    Text {
+        text: root.label-text;
+        horizontal-alignment: center;
+        font-size: 17px;
+        color: #FFFFFF;
+        height: 20px;
+        font-weight: 600;
+    }
+    Rectangle {
+        background: #635169;
+        border-radius: 4px;
+        height: 30px;
+
+        Text {
+            text: root.value-text;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+    }
+}
+
+export component BuildTile inherits Rectangle {
+    in property <string> build-name;
+    in property <string> build-status;
+    in property <string> build-duration;
+    in property <string> build-time;
+
+    height: 180px;
+    width: 400px;
+    background: #473A4C;
+    border-radius: 8px;
+    padding: 10px;
+
+    VerticalBox {
+        Text {
+            text: build-name;
+            horizontal-alignment: center;
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        StatusDisplay {
+            status-text: build-status;
+        }
+
+        HorizontalBox {
+            LabeledValueBox {
+                label-text: "Duration";
+                value-text: build-duration;
+            }
+
+            LabeledValueBox {
+                label-text: "Last Build";
+                value-text: build-time;
+            }
+        }
+    }
+}
+
+export component MainWindow inherits Window {
+    in property <[BuildTileData]> tiles;
+
+    width: 415px;
+    height: 600px;
+    background: #2A222D;
+    title: "Jenkins Build Monitor";
+
+    ScrollView {
+        VerticalBox {
+            for tile in tiles : BuildTile {
+                build-name: tile.name;
+                build-status: tile.status;
+                build-duration: tile.duration;
+                build-time: tile.time;
+            }
+        }
+    }
+}
