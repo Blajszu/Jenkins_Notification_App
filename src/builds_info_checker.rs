@@ -54,3 +54,41 @@ where
         }
     }
 }
+
+pub async fn check_builds_failed<F>(callback: F) -> Result<(), Box<dyn std::error::Error>>
+where
+F: Fn(Vec<BuildSummary>) + Send + 'static,
+{
+    let mut previous_builds = get_all_builds_data().await?;
+    let mut interval = time::interval(Duration::from_secs(5));
+
+    loop {
+        interval.tick().await;
+
+        match get_all_builds_data().await {
+            Ok(current_builds) => {
+                let new_failed_builds: Vec<BuildSummary> = current_builds
+                .iter()
+                .filter_map(|current_build| {
+                    let previous_build = previous_builds.iter().find(|b| b.name == current_build.name);
+
+                    if current_build.status == "FAILURE" &&
+                    previous_build.map(|b| b.status != "FAILURE").unwrap_or(false)
+                    {
+                        Some(current_build.clone())
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+
+                if !new_failed_builds.is_empty() {
+                    callback(new_failed_builds);
+                }
+
+                previous_builds = current_builds;
+            }
+            Err(e) => eprintln!("Error checking builds: {}", e),
+        }
+    }
+}
