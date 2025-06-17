@@ -12,6 +12,7 @@ struct BuildInfo {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct BuildSummary {
+    pub(crate) name: String,
     pub(crate) status: String,
     pub(crate) start_time: DateTime<Utc>,
     pub(crate) duration: f64,
@@ -48,6 +49,7 @@ pub async fn get_job_data(job_name: &str) -> Result<BuildSummary, Box<dyn std::e
     };
 
     Ok(BuildSummary {
+        name: job_name.to_string(),
         status,
         start_time,
         duration,

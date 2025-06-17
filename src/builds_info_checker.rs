@@ -1,6 +1,6 @@
 use std::time::Duration;
 use tokio::time;
-use crate::jenkins_api::{BuildSummary, get_job_data};
+pub(crate) use crate::jenkins_api::{BuildSummary, get_job_data};
 
 fn get_builds_names_from_file(file_path: &str) -> Result<Vec<String>, Box<dyn std::error::Error>> {
     let path = std::env::current_dir().unwrap().join(file_path);
