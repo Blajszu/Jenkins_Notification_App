@@ -1,23 +1,43 @@
-mod notification;
-mod jenkins_api;
+use std::sync::mpsc;
+use tray_item::{IconSource, TrayItem};
 
-use notification::send_fail_notification;
-use jenkins_api::get_job_data;
+enum Message {
+    Quit,
+    Green,
+    Red,
+}
 
-#[tokio::main]
-async fn main() {
-    // println!("Obecny katalog roboczy: {:?}", std::env::current_dir());
-    // send_fail_notification("PNR Analyzer Branches", "FAILURE");
-    
-    match get_job_data("MockJob").await {
-        Ok(summary) => {
-            println!("Build zakończony: {}", summary.status);
-            println!("Czas trwania: {} sekund", summary.duration);
-            println!("Start: {}", summary.start_time);
-        }
-        Err(e) => {
-            eprintln!("Błąd pobierania danych z Jenkinsa: {}", e);
+fn main() {
+    let mut tray = TrayItem::new(
+        "JNotify",
+        IconSource::Resource("bell"),
+    )
+        .unwrap();
+
+    tray.add_label("Jenkins Notification App").unwrap();
+
+    tray.add_menu_item("Show", || {
+        println!("show!");
+    })
+        .unwrap();
+
+    tray.inner_mut().add_separator().unwrap();
+
+    let (tx, rx) = mpsc::sync_channel(1);
+
+    let quit_tx = tx.clone();
+    tray.add_menu_item("Quit", move || {
+        quit_tx.send(Message::Quit).unwrap();
+    })
+        .unwrap();
+
+    loop {
+        match rx.recv() {
+            Ok(Message::Quit) => {
+                println!("Quit");
+                break;
+            }
+            _ => {}
         }
     }
-
 }
