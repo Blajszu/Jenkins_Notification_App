@@ -1,10 +1,8 @@
 pub(crate) use crate::notification::send_fail_notification;
 pub(crate) use crate::jenkins_api::BuildSummary;
-pub(crate) fn change_handler(builds: Vec<BuildSummary>) {
-    println!{"test"};
+pub(crate) fn handle_fail(builds: Vec<BuildSummary>) {
     let failed_jobs: Vec<&str> = builds
         .iter()
-        .filter(|build| build.status == "FAILURE")
         .map(|build| build.name.as_str())
         .collect();
 
