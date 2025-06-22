@@ -1,4 +1,4 @@
-mod change_handler;
+mod fail_handler;
 mod notification;
 mod jenkins_api;
 mod builds_info_checker;
@@ -7,7 +7,7 @@ mod gui;
 
 use crate::tray::{TrayMessage, create_tray};
 
-pub(crate) use crate::change_handler::change_handler;
+pub(crate) use crate::fail_handler::handle_fail;
 use crate::builds_info_checker::check_builds_failed;
 pub(crate) use crate::gui::show;
 
@@ -16,7 +16,7 @@ async fn main() {
     let _ = std::thread::spawn(|| {
         let rt = tokio::runtime::Runtime::new().unwrap();
         rt.block_on(async {
-            if let Err(e) = check_builds_failed(change_handler).await {
+            if let Err(e) = check_builds_failed(handle_fail).await {
                 eprintln!("Error in check_builds: {}", e);
             }
         });

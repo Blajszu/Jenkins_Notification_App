@@ -36,12 +36,10 @@ where
     F: Fn(Vec<BuildSummary>) + Send + 'static,
 {
     let mut previous_builds = get_all_builds_data().await?;
-
     let mut interval = time::interval(Duration::from_secs(5));
 
     loop {
         interval.tick().await;
-
         match get_all_builds_data().await {
             Ok(current_builds) => {
 

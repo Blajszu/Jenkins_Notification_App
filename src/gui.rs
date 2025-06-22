@@ -21,7 +21,6 @@ pub async fn show() -> Result<(), Box<dyn std::error::Error>> {
     let initial_data = get_all_builds_data().await?;
     let ui = MainWindow::new()?;
 
-    // Inicjalizacja UI
     let tiles_model = Rc::new(VecModel::from(
         initial_data.into_iter()
             .map(BuildTileData::from)
@@ -31,7 +30,6 @@ pub async fn show() -> Result<(), Box<dyn std::error::Error>> {
 
     let ui_weak = ui.as_weak();
 
-    // Używamy zwykłego spawn z Tokio
     tokio::spawn(async move {
         let update_callback = move |new_data: Vec<BuildSummary>| {
             let ui_weak_clone = ui_weak.clone();
@@ -39,7 +37,6 @@ pub async fn show() -> Result<(), Box<dyn std::error::Error>> {
                 .map(BuildTileData::from)
                 .collect();
 
-            // Przekazujemy dane do wątku UI
             slint::invoke_from_event_loop(move || {
                 if let Some(ui) = ui_weak_clone.upgrade() {
                     let vec_model = Rc::new(VecModel::from(build_tiles_data));
@@ -55,8 +52,6 @@ pub async fn show() -> Result<(), Box<dyn std::error::Error>> {
         }
     });
 
-    // Uruchamiamy główną pętlę UI
     ui.run()?;
-
     Ok(())
 }
