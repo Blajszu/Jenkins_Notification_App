@@ -14,7 +14,6 @@ dependencies = [
  "serde",
  "slint",
  "slint-build",
- "time",
  "tokio",
  "tray-item",
 ]
