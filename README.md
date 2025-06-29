@@ -76,6 +76,14 @@ build-api-backend
 
 </div>
 
+### Notification
+
+<div align="center">
+  
+  ![Zrzut ekranu 2025-06-29 120703](https://github.com/user-attachments/assets/07a831fa-6879-47b8-aaf7-b4e5be0bad84)
+
+</div>
+
 ### GUI
 
 <div align="center">
