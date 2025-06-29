@@ -68,4 +68,18 @@ build-api-backend
 
 ## 🖼️ Screenshots
 
-*(You can add GUI or tray icon screenshots here)*
+### Tray Icon
+
+<div align="center">
+  
+  ![Zrzut ekranu 2025-06-29 113933](https://github.com/user-attachments/assets/913d50cc-faa9-4e96-b969-dd2d170bf0be)
+
+</div>
+
+### GUI
+
+<div align="center">
+  
+  ![Zrzut ekranu 2025-06-29 114032](https://github.com/user-attachments/assets/ff16ea58-bba8-4ebe-9c7f-7e9efe8c2d2f)
+
+</div>
